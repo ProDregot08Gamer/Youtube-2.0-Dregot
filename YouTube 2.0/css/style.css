@@ -1,0 +1,261 @@
+/* ========== Глобальные настройки ========== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #0f0f0f;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    transition: background-image 0.3s ease;
+}
+
+.app {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.7);
+    min-height: 100vh;
+}
+
+/* ========== Шапка ========== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(15,15,15,0.95);
+    border-bottom: 1px solid #303030;
+    margin-bottom: 30px;
+    border-radius: 8px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ========== Кнопки ========== */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    background-color: #272727;
+    color: white;
+}
+
+.btn:hover {
+    background-color: #3f3f3f;
+}
+
+.btn-primary {
+    background-color: #3ea6ff;
+    color: #0f0f0f;
+}
+
+.btn-primary:hover {
+    background-color: #65b8ff;
+}
+
+.btn-danger {
+    background-color: #d32f2f;
+}
+
+.btn-danger:hover {
+    background-color: #f44336;
+}
+
+.btn-small {
+    padding: 4px 12px;
+    font-size: 0.8rem;
+}
+
+/* ========== Карточки видео ========== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+    cursor: pointer;
+    border: 1px solid #303030;
+    position: relative;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    border-color: #3ea6ff;
+}
+
+.thumbnail {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    background-color: #2a2a2a;
+}
+
+.video-info {
+    padding: 12px;
+}
+
+.video-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+.video-meta {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* ========== Формы ========== */
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ddd;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #3ea6ff;
+}
+
+/* ========== Страница видео ========== */
+.video-player-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+video {
+    width: 100%;
+    border-radius: 12px;
+    background-color: black;
+}
+
+.video-details {
+    margin-top: 20px;
+}
+
+.video-actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.like-btn, .dislike-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: #272727;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.like-btn.active {
+    background-color: #3ea6ff;
+    color: black;
+}
+
+.dislike-btn.active {
+    background-color: #d32f2f;
+}
+
+.subscribe-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: #cc0000;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.subscribe-btn.subscribed {
+    background-color: #272727;
+}
+
+/* ========== Админ-панель ========== */
+.admin-badge {
+    background-color: #ffd600;
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.admin-controls {
+    margin-top: 10px;
+    padding: 0 12px 12px 12px;
+    display: flex;
+    gap: 10px;
+}
+
+/* ========== Утилиты ========== */
+.hidden {
+    display: none;
+}

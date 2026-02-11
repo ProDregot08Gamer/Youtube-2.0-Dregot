@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube 2.0 — Главный админ Youtube-Dregot, заявки на админа</title>
+    <style>
+        /* ========== СТИЛИ (ПОЛНЫЙ НАБОР) ========== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #0f0f0f;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(0,0,0,0.7);
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(15,15,15,0.95);
+            border-bottom: 1px solid #303030;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+        .logo span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff0000;
+        }
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #3ea6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            background-color: #272727;
+            color: white;
+        }
+        .btn:hover { background-color: #3f3f3f; }
+        .btn-primary {
+            background-color: #3ea6ff;
+            color: #0f0f0f;
+        }
+        .btn-primary:hover { background-color: #65b8ff; }
+        .btn-success {
+            background-color: #2e7d32;
+            color: white;
+        }
+        .btn-success:hover { background-color: #388e3c; }
+        .btn-danger {
+            background-color: #d32f2f;
+        }
+        .btn-danger:hover { background-color: #f44336; }
+        .btn-warning {
+            background-color: #ffb300;
+            color: #0f0f0f;
+        }
+        .btn-warning:hover { background-color: #ffc107; }
+        .btn-small {
+            padding: 4px 12px;
+            font-size: 0.8rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+            cursor: pointer;
+            border: 1px solid #303030;
+            position: relative;
+        }
+        .card:hover {
+            transform: scale(1.02);
+            border-color: #3ea6ff;
+        }
+        .thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            background-color: #2a2a2a;
+        }
+        .video-info {
+            padding: 12px;
+        }
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .video-meta {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3ea6ff;
+        }
+        .video-player-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        video {
+            width: 100%;
+            border-radius: 12px;
+            background-color: black;
+        }
+        .video-details {
+            margin-top: 20px;
+        }
+        .video-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .like-btn, .dislike-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #272727;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .like-btn.active {
+            background-color: #3ea6ff;
+            color: black;
+        }
+        .dislike-btn.active {
+            background-color: #d32f2f;
+        }
+        .subscribe-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .subscribe-btn.subscribed {
+            background-color: #272727;
+        }
+        .admin-badge {
+            background-color: #ffb300;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .super-admin-badge {
+            background-color: #ffd700;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+            box-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+        .admin-controls {
+            margin-top: 10px;
+            padding: 0 12px 12px 12px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ========== ВКЛАДКИ ========== */
+        .tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #303030;
+            padding-bottom: 10px;
+        }
+        .tab {
+            padding: 8px 20px;
+            border-radius: 20px;
+            background-color: transparent;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .tab:hover {
+            background-color: #272727;
+            color: #fff;
+        }
+        .tab.active {
+            background-color: #3ea6ff;
+            color: #0f0f0f;
+        }
+
+        /* ========== КОММЕНТАРИИ ========== */
+        .comments-section {
+            margin-top: 40px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .comment {
+            padding: 15px 0;
+            border-bottom: 1px solid #303030;
+        }
+        .comment:last-child {
+            border-bottom: none;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .comment-author {
+            color: #3ea6ff;
+            font-weight: 500;
+        }
+        .comment-date {
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+        .comment-text {
+            color: #fff;
+            line-height: 1.4;
+        }
+        .comment-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        /* ========== НАСТРОЙКИ КАНАЛА ========== */
+        .channel-stats {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #303030;
+        }
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        .stat-label {
+            color: #aaa;
+        }
+        .stat-value {
+            color: #fff;
+            font-weight: 500;
+        }
+        .avatar-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #3ea6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        /* ========== ПОИСК YouTube ========== */
+        .youtube-search {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .youtube-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+
+        /* ========== ЗАЯВКИ НА АДМИНА ========== */
+        .applications-container {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        .application-card {
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .application-user {
+            color: #3ea6ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .application-date {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        .application-info {
+            margin-bottom: 15px;
+        }
+        .application-reason {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #ddd;
+            font-style: italic;
+        }
+        .application-actions {
+            display: flex;
+            gap: 15px;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="app" id="app"></div>
+
+    <script>
+        // ============================================
+        // YOUTUBE 2.0 — ФИНАЛЬНАЯ ВЕРСИЯ
+        // ГЛАВНЫЙ АДМИН: Youtube-Dregot
+        // ЗАЯВКИ НА АДМИНА, SUPERADMIN, TXT ТОЛЬКО ДЛЯ НЕГО
+        // ============================================
+
+        // ---------- 1. НАСТРОЙКИ ХРАНИЛИЩ ----------
+        const STORAGE_KEYS = {
+            USERS: 'yt2_users',
+            CURRENT_USER: 'yt2_currentUser',
+            YT_API_KEY: 'yt2_apikey'
+        };
+
+        function safeParse(key, defaultValue) {
+            try {
+                const item = localStorage.getItem(key);
+                if (item === null) return defaultValue;
+                return JSON.parse(item);
+            } catch (e) {
+                console.warn(`Ошибка парсинга ${key}, очищаю...`, e);
+                localStorage.removeItem(key);
+                return defaultValue;
+            }
+        }
+
+        let users = safeParse(STORAGE_KEYS.USERS, []);
+        let currentUser = safeParse(STORAGE_KEYS.CURRENT_USER, null);
+        let youtubeApiKey = localStorage.getItem(STORAGE_KEYS.YT_API_KEY) || 'AIzaSyB_9vVoykH5Ae04bqE_QaANew4Z8YQe1ik';
+
+        function saveUsers() { localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users)); }
+        function saveCurrentUser() { localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser)); }
+        function saveYoutubeApiKey(key) {
+            youtubeApiKey = key;
+            localStorage.setItem(STORAGE_KEYS.YT_API_KEY, key);
+        }
+
+        // ---------- 2. INDEXEDDB ДЛЯ ВИДЕО, КОММЕНТАРИЕВ, АВАТАРОВ, ЗАЯВОК ----------
+        const DB_NAME = 'YouTubeDB';
+        const DB_VERSION = 4; // увеличиваем версию для хранилища заявок
+        const VIDEO_STORE = 'videos';
+        const COMMENT_STORE = 'comments';
+        const AVATAR_STORE = 'avatars';
+        const APPLICATION_STORE = 'admin_applications'; // новое хранилище
+
+        let db = null;
+        let dbPromise = null;
+
+        function openDB() {
+            if (dbPromise) return dbPromise;
+            dbPromise = new Promise((resolve, reject) => {
+                if (db) {
+                    resolve(db);
+                    return;
+                }
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    
+                    // Видео
+                    if (!db.objectStoreNames.contains(VIDEO_STORE)) {
+                        const store = db.createObjectStore(VIDEO_STORE, { keyPath: 'id' });
+                        store.createIndex('authorId', 'authorId', { unique: false });
+                    }
+                    
+                    // Комментарии
+                    if (!db.objectStoreNames.contains(COMMENT_STORE)) {
+                        const store = db.createObjectStore(COMMENT_STORE, { keyPath: 'id' });
+                        store.createIndex('videoId', 'videoId', { unique: false });
+                        store.createIndex('authorId', 'authorId', { unique: false });
+                    }
+                    
+                    // Аватары
+                    if (!db.objectStoreNames.contains(AVATAR_STORE)) {
+                        db.createObjectStore(AVATAR_STORE, { keyPath: 'userId' });
+                    }
+                    
+                    // Заявки на админа
+                    if (!db.objectStoreNames.contains(APPLICATION_STORE)) {
+                        const store = db.createObjectStore(APPLICATION_STORE, { keyPath: 'id' });
+                        store.createIndex('username', 'username', { unique: false });
+                        store.createIndex('status', 'status', { unique: false });
+                        store.createIndex('timestamp', 'timestamp', { unique: false });
+                    }
+                };
+            });
+            return dbPromise;
+        }
+
+        // ---------- ВИДЕО: РАБОТА С БАЗОЙ ----------
+        async function saveVideoToDB(videoData) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(VIDEO_STORE, 'readwrite');
+                const store = tx.objectStore(VIDEO_STORE);
+                const request = store.put(videoData);
+                request.onsuccess = () => resolve(videoData.id);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getAllVideosFromDB() {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(VIDEO_STORE, 'readonly');
+                const store = tx.objectStore(VIDEO_STORE);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getVideoFromDB(videoId) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(VIDEO_STORE, 'readonly');
+                const store = tx.objectStore(VIDEO_STORE);
+                const request = store.get(videoId);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function deleteVideoFromDB(videoId) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(VIDEO_STORE, 'readwrite');
+                const store = tx.objectStore(VIDEO_STORE);
+                const request = store.delete(videoId);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function updateVideoInDB(videoId, updates) {
+            const video = await getVideoFromDB(videoId);
+            if (!video) return;
+            Object.assign(video, updates);
+            await saveVideoToDB(video);
+        }
+
+        // ---------- КОММЕНТАРИИ: РАБОТА С БАЗОЙ ----------
+        async function saveCommentToDB(commentData) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(COMMENT_STORE, 'readwrite');
+                const store = tx.objectStore(COMMENT_STORE);
+                const request = store.put(commentData);
+                request.onsuccess = () => resolve(commentData.id);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getCommentsByVideo(videoId) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(COMMENT_STORE, 'readonly');
+                const store = tx.objectStore(COMMENT_STORE);
+                const index = store.index('videoId');
+                const request = index.getAll(videoId);
+                request.onsuccess = () => {
+                    const comments = request.result;
+                    comments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    resolve(comments);
+                };
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function deleteCommentFromDB(commentId) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(COMMENT_STORE, 'readwrite');
+                const store = tx.objectStore(COMMENT_STORE);
+                const request = store.delete(commentId);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function deleteCommentsByVideo(videoId) {
+            const comments = await getCommentsByVideo(videoId);
+            for (const comment of comments) {
+                await deleteCommentFromDB(comment.id);
+            }
+        }
+
+        // ---------- АВАТАРЫ: РАБОТА С БАЗОЙ ----------
+        async function saveAvatarToDB(userId, avatarData) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(AVATAR_STORE, 'readwrite');
+                const store = tx.objectStore(AVATAR_STORE);
+                const request = store.put({ userId, avatarData });
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getAvatarFromDB(userId) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(AVATAR_STORE, 'readonly');
+                const store = tx.objectStore(AVATAR_STORE);
+                const request = store.get(userId);
+                request.onsuccess = () => resolve(request.result?.avatarData || null);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function deleteAvatarFromDB(userId) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(AVATAR_STORE, 'readwrite');
+                const store = tx.objectStore(AVATAR_STORE);
+                const request = store.delete(userId);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // ---------- ЗАЯВКИ НА АДМИНА: РАБОТА С БАЗОЙ ----------
+        async function saveApplicationToDB(applicationData) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(APPLICATION_STORE, 'readwrite');
+                const store = tx.objectStore(APPLICATION_STORE);
+                const request = store.put(applicationData);
+                request.onsuccess = () => resolve(applicationData.id);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getApplicationsByStatus(status) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(APPLICATION_STORE, 'readonly');
+                const store = tx.objectStore(APPLICATION_STORE);
+                const index = store.index('status');
+                const request = index.getAll(status);
+                request.onsuccess = () => {
+                    const applications = request.result;
+                    applications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    resolve(applications);
+                };
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getAllApplications() {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(APPLICATION_STORE, 'readonly');
+                const store = tx.objectStore(APPLICATION_STORE);
+                const request = store.getAll();
+                request.onsuccess = () => {
+                    const applications = request.result;
+                    applications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    resolve(applications);
+                };
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function getApplicationById(applicationId) {
+            const database = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = database.transaction(APPLICATION_STORE, 'readonly');
+                const store = tx.objectStore(APPLICATION_STORE);
+                const request = store.get(applicationId);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function updateApplicationStatus(applicationId, status) {
+            const database = await openDB();
+            const tx = database.transaction(APPLICATION_STORE, 'readwrite');
+            const store = tx.objectStore(APPLICATION_STORE);
+            const application = await getApplicationById(applicationId);
+            if (application) {
+                application.status = status;
+                application.processedAt = new Date().toISOString();
+                application.processedBy = currentUser?.id || null;
+                const request = store.put(application);
+                return new Promise((resolve, reject) => {
+                    request.onsuccess = () => resolve();
+                    request.onerror = () => reject(request.error);
+                });
+            }
+        }
+
+        // ---------- 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ----------
+        function generateId() {
+            return Date.now() + Math.random().toString(36).substr(2, 9);
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ---------- 4. РАБОТА С ПОЛЬЗОВАТЕЛЯМИ ----------
+        function findUserByUsername(username) {
+            return users.find(u => u.username.toLowerCase() === username.toLowerCase());
+        }
+
+        function registerUser(username, password) {
+            if (findUserByUsername(username)) {
+                return { success: false, error: 'Имя пользователя уже занято' };
+            }
+            
+            // Проверяем, является ли пользователь главным админом
+            const isSuperAdmin = username === 'Youtube-Dregot';
+            
+            const newUser = {
+                id: generateId(),
+                username,
+                password,
+                subscriptions: [],
+                likedVideos: [],
+                dislikedVideos: [],
+                registered: new Date().toISOString(),
+                isAdmin: isSuperAdmin, // для главного админа isAdmin = true
+                isSuperAdmin: isSuperAdmin // флаг главного админа
+            };
+            users.push(newUser);
+            saveUsers();
+
+            // Только главный админ получает .txt файл
+            if (isSuperAdmin) {
+                const userData = `Username: ${username}\nPassword: ${password}\nID: ${newUser.id}\nRegistered: ${newUser.registered}\nSuperAdmin: Да (главный администратор)`;
+                const blob = new Blob([userData], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${username}_SUPERADMIN_data.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            return { success: true, user: newUser };
+        }
+
+        function loginUser(username, password) {
+            const user = findUserByUsername(username);
+            if (!user || user.password !== password) {
+                return { success: false, error: 'Неверное имя или пароль' };
+            }
+            currentUser = user;
+            saveCurrentUser();
+            return { success: true, user };
+        }
+
+        function logout() {
+            currentUser = null;
+            saveCurrentUser();
+            renderHome();
+        }
+
+        // ---------- ПОЛУЧЕНИЕ АВАТАРА (ИЗ КЭША ИЛИ БД) ----------
+        const avatarCache = new Map();
+
+        async function getUserAvatar(userId) {
+            if (avatarCache.has(userId)) {
+                return avatarCache.get(userId);
+            }
+            const avatar = await getAvatarFromDB(userId);
+            avatarCache.set(userId, avatar);
+            return avatar;
+        }
+
+        async function setUserAvatar(userId, avatarData) {
+            await saveAvatarToDB(userId, avatarData);
+            avatarCache.set(userId, avatarData);
+        }
+
+        // ---------- 5. ПРОВЕРКА ВОЗРАСТА АККАУНТА И ЛИМИТЫ ----------
+        function getAccountAgeInDays(user) {
+            if (!user) return 0;
+            const registered = new Date(user.registered);
+            const now = new Date();
+            const diff = now - registered;
+            return diff / (1000 * 60 * 60 * 24);
+        }
+
+        function getMaxUploadSizeForUser(user) {
+            if (!user) return 0;
+            // Администраторы (включая главного) всегда 20 ГБ
+            if (user.isAdmin) {
+                return 20 * 1024; // 20 ГБ в МБ
+            }
+            const ageDays = getAccountAgeInDays(user);
+            if (ageDays >= 7) {
+                return 10 * 1024; // 10 ГБ в МБ
+            } else {
+                return 1 * 1024; // 1 ГБ в МБ
+            }
+        }
+
+        // ---------- 6. РАБОТА С ВИДЕО (ЧЕРЕЗ INDEXEDDB) ----------
+        let videosCache = [];
+
+        async function loadVideosCache() {
+            try {
+                videosCache = await getAllVideosFromDB();
+                videosCache.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            } catch (e) {
+                console.error('Ошибка загрузки видео из IndexedDB', e);
+                videosCache = [];
+            }
+        }
+
+        async function addVideo(title, videoFile, thumbnailFile) {
+            if (!currentUser) return null;
+
+            const maxSizeMB = getMaxUploadSizeForUser(currentUser);
+            const videoSizeMB = videoFile.size / (1024 * 1024);
+            if (videoSizeMB > maxSizeMB) {
+                alert(`❌ Видео слишком большое (${videoSizeMB.toFixed(1)} МБ).\nМаксимум для вашего аккаунта: ${maxSizeMB} МБ.`);
+                return null;
+            }
+
+            try {
+                const videoData = await readFileAsDataURL(videoFile);
+                const thumbnailData = await readFileAsDataURL(thumbnailFile);
+
+                const newVideo = {
+                    id: generateId(),
+                    title,
+                    authorId: currentUser.id,
+                    authorName: currentUser.username,
+                    videoData,
+                    thumbnailData,
+                    likes: [],
+                    dislikes: [],
+                    views: [],
+                    timestamp: new Date().toISOString()
+                };
+
+                await saveVideoToDB(newVideo);
+                await loadVideosCache();
+                return newVideo;
+            } catch (err) {
+                console.error('Ошибка сохранения видео в IndexedDB', err);
+                alert('Ошибка при сохранении видео. Возможно, файл слишком большой или недостаточно места.');
+                return null;
+            }
+        }
+
+        function getVideoById(videoId) {
+            return videosCache.find(v => v.id === videoId);
+        }
+
+        async function deleteVideo(videoId) {
+            await deleteCommentsByVideo(videoId);
+            await deleteVideoFromDB(videoId);
+            await loadVideosCache();
+        }
+
+        async function updateVideoTitle(videoId, newTitle) {
+            await updateVideoInDB(videoId, { title: newTitle });
+            await loadVideosCache();
+        }
+
+        // ---------- ЛАЙКИ / ДИЗЛАЙКИ ----------
+        async function toggleLike(videoId, userId) {
+            const video = await getVideoFromDB(videoId);
+            if (!video || !userId) return false;
+            if (video.likes.includes(userId)) {
+                video.likes = video.likes.filter(id => id !== userId);
+            } else {
+                video.dislikes = video.dislikes.filter(id => id !== userId);
+                video.likes.push(userId);
+            }
+            await saveVideoToDB(video);
+            await loadVideosCache();
+            return true;
+        }
+
+        async function toggleDislike(videoId, userId) {
+            const video = await getVideoFromDB(videoId);
+            if (!video || !userId) return false;
+            if (video.dislikes.includes(userId)) {
+                video.dislikes = video.dislikes.filter(id => id !== userId);
+            } else {
+                video.likes = video.likes.filter(id => id !== userId);
+                video.dislikes.push(userId);
+            }
+            await saveVideoToDB(video);
+            await loadVideosCache();
+            return true;
+        }
+
+        // ---------- ПРОСМОТРЫ ----------
+        async function addView(videoId, userId) {
+            const video = await getVideoFromDB(videoId);
+            if (!video) return;
+            if (userId && !video.views.includes(userId)) {
+                video.views.push(userId);
+            } else if (!userId) {
+                video.views.push('guest_' + Date.now());
+            }
+            await saveVideoToDB(video);
+            await loadVideosCache();
+        }
+
+        // ---------- ПОДПИСКИ ----------
+        function toggleSubscription(authorId, userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return false;
+            if (user.subscriptions.includes(authorId)) {
+                user.subscriptions = user.subscriptions.filter(id => id !== authorId);
+            } else {
+                user.subscriptions.push(authorId);
+            }
+            saveUsers();
+            if (currentUser && currentUser.id === userId) {
+                currentUser = user;
+                saveCurrentUser();
+            }
+            return true;
+        }
+
+        function isSubscribed(authorId, userId) {
+            const user = users.find(u => u.id === userId);
+            return user ? user.subscriptions.includes(authorId) : false;
+        }
+
+        // ---------- КОММЕНТАРИИ ----------
+        async function addComment(videoId, text) {
+            if (!currentUser) {
+                alert('Войдите, чтобы оставить комментарий');
+                return null;
+            }
+            const comment = {
+                id: generateId(),
+                videoId,
+                authorId: currentUser.id,
+                authorName: currentUser.username,
+                text: text.trim(),
+                timestamp: new Date().toISOString()
+            };
+            await saveCommentToDB(comment);
+            return comment;
+        }
+
+        async function deleteComment(commentId, userId, isAdmin) {
+            const database = await openDB();
+            const comment = await new Promise((resolve, reject) => {
+                const tx = database.transaction(COMMENT_STORE, 'readonly');
+                const store = tx.objectStore(COMMENT_STORE);
+                const request = store.get(commentId);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+            if (!comment) return false;
+            if (comment.authorId === userId || isAdmin) {
+                await deleteCommentFromDB(commentId);
+                return true;
+            }
+            return false;
+        }
+
+        // ---------- СТАТИСТИКА КАНАЛА ----------
+        async function getChannelStats(userId) {
+            const subscribers = users.filter(u => u.subscriptions.includes(userId)).length;
+            const userVideos = videosCache.filter(v => v.authorId === userId);
+            const totalViews = userVideos.reduce((sum, v) => sum + v.views.length, 0);
+            const totalLikes = userVideos.reduce((sum, v) => sum + v.likes.length, 0);
+            const totalDislikes = userVideos.reduce((sum, v) => sum + v.dislikes.length, 0);
+            const videosCount = userVideos.length;
+            return { subscribers, totalViews, totalLikes, totalDislikes, videosCount };
+        }
+
+        // ---------- 7. ПРОВЕРКА ВЛАДЕЛЬЦА (ТОЛЬКО ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ) ----------
+        function verifyOwner(birthDate, password) {
+            const REQUIRED_BIRTH = "02.02.2017";
+            const REQUIRED_PASS = "H3NGbaSh7VMq";
+            return (birthDate === REQUIRED_BIRTH && password === REQUIRED_PASS);
+        }
+
+        // ---------- 8. ИМПОРТ ИЗ ПАПКИ VIDEO ----------
+        async function importFromVideoFolder() {
+            if (!currentUser) {
+                alert('❌ Для импорта видео необходимо войти в систему.');
+                renderLogin();
+                return;
+            }
+
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.webkitdirectory = true;
+            input.accept = 'video/mp4,image/*';
+
+            input.onchange = async (e) => {
+                const files = Array.from(e.target.files);
+                if (files.length === 0) {
+                    alert('Папка не содержит файлов.');
+                    return;
+                }
+
+                const folders = {};
+                files.forEach(file => {
+                    const path = file.webkitRelativePath;
+                    const parts = path.split('/');
+                    const folderName = parts[0];
+                    if (!folders[folderName]) folders[folderName] = [];
+                    folders[folderName].push(file);
+                });
+
+                const folderNames = Object.keys(folders);
+                alert(`📁 Найдено папок: ${folderNames.length}. Начинаю импорт...`);
+
+                let importedCount = 0;
+                let skippedCount = 0;
+                const maxSizeMB = getMaxUploadSizeForUser(currentUser);
+
+                for (const [folderName, fileList] of Object.entries(folders)) {
+                    const videoFile = fileList.find(f => f.name.toLowerCase().endsWith('.mp4'));
+                    const thumbnailFile = fileList.find(f => {
+                        const name = f.name.toLowerCase();
+                        return name.endsWith('.jpg') || name.endsWith('.jpeg') || 
+                               name.endsWith('.png') || name.endsWith('.webp') || 
+                               name.endsWith('.gif');
+                    });
+
+                    if (!videoFile) {
+                        console.warn(`В папке "${folderName}" нет видео .mp4`);
+                        skippedCount++;
+                        continue;
+                    }
+                    if (!thumbnailFile) {
+                        console.warn(`В папке "${folderName}" нет обложки`);
+                        skippedCount++;
+                        continue;
+                    }
+
+                    const videoSizeMB = videoFile.size / (1024 * 1024);
+                    if (videoSizeMB > maxSizeMB) {
+                        alert(`⚠️ Видео "${folderName}" слишком большое (${videoSizeMB.toFixed(1)} МБ). Максимум ${maxSizeMB} МБ. Пропускаем.`);
+                        skippedCount++;
+                        continue;
+                    }
+
+                    try {
+                        const videoData = await readFileAsDataURL(videoFile);
+                        const thumbnailData = await readFileAsDataURL(thumbnailFile);
+                        const newVideo = {
+                            id: generateId(),
+                            title: folderName,
+                            authorId: currentUser.id,
+                            authorName: currentUser.username,
+                            videoData,
+                            thumbnailData,
+                            likes: [],
+                            dislikes: [],
+                            views: [],
+                            timestamp: new Date().toISOString()
+                        };
+                        await saveVideoToDB(newVideo);
+                        importedCount++;
+                        console.log(`✅ Импортировано: ${folderName}`);
+                    } catch (err) {
+                        console.error(`Ошибка импорта папки "${folderName}":`, err);
+                        skippedCount++;
+                    }
+                }
+
+                await loadVideosCache();
+                alert(`✅ Импорт завершён!\n📥 Добавлено видео: ${importedCount}\n⏭ Пропущено: ${skippedCount}`);
+                renderHome();
+            };
+
+            input.click();
+        }
+
+        // ---------- 9. РАБОТА С YOUTUBE API ----------
+        let youtubeSearchResults = [];
+        let selectedYoutubeVideoId = null;
+
+        async function searchYouTube(query) {
+            if (!youtubeApiKey) {
+                alert('❌ Не указан API ключ YouTube. Укажите его в настройках.');
+                return [];
+            }
+
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${encodeURIComponent(query)}&type=video&key=${youtubeApiKey}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.error) {
+                    console.error('YouTube API error:', data.error);
+                    alert(`Ошибка YouTube API: ${data.error.message}`);
+                    return [];
+                }
+                return data.items.map(item => ({
+                    id: item.id.videoId,
+                    title: item.snippet.title,
+                    channel: item.snippet.channelTitle,
+                    publishedAt: item.snippet.publishedAt,
+                    description: item.snippet.description,
+                    thumbnail: item.snippet.thumbnails.medium.url
+                }));
+            } catch (err) {
+                console.error('Ошибка при поиске YouTube:', err);
+                alert('Не удалось выполнить поиск. Проверьте подключение к интернету и ключ API.');
+                return [];
+            }
+        }
+
+        // ---------- 10. РЕНДЕРИНГ ИНТЕРФЕЙСА ----------
+        const app = document.getElementById('app');
+
+        function loadAssets() {
+            const bgImg = new Image();
+            bgImg.src = './Icons/BackGround.png';
+            bgImg.onload = () => {
+                document.body.style.backgroundImage = `url('./Icons/BackGround.png')`;
+            };
+            bgImg.onerror = () => {
+                document.body.style.backgroundImage = 'none';
+            };
+        }
+
+        // Состояние активной вкладки
+        let currentTab = 'new';
+
+        // ---------- ФУНКЦИИ ДЛЯ ОТОБРАЖЕНИЯ АВАТАРА ----------
+        async function renderAvatarElement(userId, size = 36) {
+            const avatar = await getUserAvatar(userId);
+            const user = users.find(u => u.id === userId);
+            const initial = user ? user.username.charAt(0).toUpperCase() : '?';
+            if (avatar) {
+                return `<img src="${avatar}" class="avatar" style="width: ${size}px; height: ${size}px;">`;
+            } else {
+                return `<div class="avatar" style="width: ${size}px; height: ${size}px; background-color: #3ea6ff;">${initial}</div>`;
+            }
+        }
+
+        // ---------- ГЛАВНАЯ СТРАНИЦА ----------
+        window.renderHome = async function() {
+            await loadVideosCache();
+            const isAdmin = currentUser?.isAdmin || false;
+            const isSuperAdmin = currentUser?.isSuperAdmin || false;
+
+            let displayedVideos = [];
+            if (currentTab === 'new') {
+                displayedVideos = [...videosCache].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            } else if (currentTab === 'popular') {
+                displayedVideos = [...videosCache].sort((a, b) => b.views.length - a.views.length).slice(0, 100);
+            } else if (currentTab === 'youtube') {
+                renderYoutubeTab();
+                return;
+            }
+
+            let currentUserAvatarHtml = '';
+            if (currentUser) {
+                currentUserAvatarHtml = await renderAvatarElement(currentUser.id, 36);
+            }
+
+            // Определяем бейдж для текущего пользователя
+            let adminBadgeHtml = '';
+            if (currentUser) {
+                if (currentUser.isSuperAdmin) {
+                    adminBadgeHtml = '<span class="super-admin-badge">SUPER ADMIN</span>';
+                } else if (currentUser.isAdmin) {
+                    adminBadgeHtml = '<span class="admin-badge">ADMIN</span>';
+                }
+            }
+
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        ${!isSuperAdmin ? '<button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>' : ''}
+                        ${currentUser ? `
+                            <div class="user-info">
+                                ${currentUserAvatarHtml}
+                                <span>${currentUser.username} ${adminBadgeHtml}</span>
+                            </div>
+                            <button class="btn" onclick="renderUpload()">➕ Загрузить</button>
+                            <button class="btn" onclick="importFromVideoFolder()">📁 Импорт из Video</button>
+                            <button class="btn" onclick="renderSettings()">⚙️ Настройки</button>
+                            <button class="btn" onclick="renderChannelSettings()">📺 Настройки канала</button>
+                            ${!currentUser.isSuperAdmin ? '<button class="btn" onclick="renderApplicationForm()">📝 Подать заявку на админа</button>' : ''}
+                            ${isSuperAdmin ? '<button class="btn btn-warning" onclick="renderApplicationsPanel()">📋 Заявки на админа</button>' : ''}
+                            <button class="btn" onclick="logoutHandler()">🚪 Выйти</button>
+                        ` : `
+                            <button class="btn btn-primary" onclick="renderLogin()">🔑 Войти</button>
+                            <button class="btn" onclick="renderRegister()">📝 Регистрация</button>
+                        `}
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="tabs">
+                        <div class="tab ${currentTab === 'new' ? 'active' : ''}" onclick="setTab('new')">🆕 Новые видео</div>
+                        <div class="tab ${currentTab === 'popular' ? 'active' : ''}" onclick="setTab('popular')">🔥 Популярные (топ 100)</div>
+                        <div class="tab ${currentTab === 'youtube' ? 'active' : ''}" onclick="setTab('youtube')">🎬 YouTube Видео</div>
+                    </div>
+                    <div class="grid" id="video-grid">
+                        ${displayedVideos.length === 0 ? '<p style="color: #aaa;">Пока нет видео. Загрузите через форму или импортируйте из папки Video!</p>' : ''}
+                        ${displayedVideos.map(video => `
+                            <div class="card" data-video-id="${video.id}">
+                                <img class="thumbnail" src="${video.thumbnailData}" alt="${video.title}" onclick="renderVideoPage('${video.id}')" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23333%22/><text x=%2230%22 y=%2255%22 fill=%22%23fff%22>Нет обложки</text></svg>'">
+                                <div class="video-info" onclick="renderVideoPage('${video.id}')">
+                                    <div class="video-title">${escapeHtml(video.title)}</div>
+                                    <div class="video-meta">
+                                        ${escapeHtml(video.authorName)} • 
+                                        👁 ${video.views.length} • 
+                                        👍 ${video.likes.length} • 
+                                        👎 ${video.dislikes.length}
+                                    </div>
+                                </div>
+                                ${(isAdmin || (currentUser && currentUser.id === video.authorId)) ? `
+                                    <div class="admin-controls">
+                                        <button class="btn btn-small" onclick="editVideoPrompt('${video.id}')">✏️ Ред.</button>
+                                        <button class="btn btn-danger btn-small" onclick="deleteVideoHandler('${video.id}')">🗑️ Удалить</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        // ---------- ФОРМА ПОДАЧИ ЗАЯВКИ НА АДМИНА ----------
+        window.renderApplicationForm = function() {
+            if (!currentUser) {
+                alert('Необходимо войти');
+                renderLogin();
+                return;
+            }
+
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        <span>👤 ${currentUser.username}</span>
+                        <button class="btn" onclick="logoutHandler()">Выйти</button>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <h2 style="margin-bottom: 20px;">📝 Подать заявку на админа</h2>
+                    <form onsubmit="applicationSubmitHandler(event)">
+                        <div class="form-group">
+                            <label>Ваш ник (будет проверен)</label>
+                            <input type="text" id="app-username" class="form-control" value="${currentUser.username}" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ваш возраст</label>
+                            <input type="number" id="app-age" class="form-control" placeholder="Например: 16" min="1" max="120" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Почему вы хотите стать админом?</label>
+                            <textarea id="app-reason" class="form-control" rows="5" placeholder="Расскажите о себе и почему вам нужны права администратора..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;">📨 Отправить заявку</button>
+                        <button type="button" class="btn" style="width:100%; margin-top:10px;" onclick="renderHome()">Отмена</button>
+                    </form>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        // Обработчик отправки заявки
+        window.applicationSubmitHandler = async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('app-username').value.trim();
+            const age = document.getElementById('app-age').value.trim();
+            const reason = document.getElementById('app-reason').value.trim();
+
+            if (!username || !age || !reason) {
+                alert('Заполните все поля');
+                return;
+            }
+
+            // Проверяем, не подавал ли пользователь уже заявку со статусом pending
+            const existingApplications = await getApplicationsByStatus('pending');
+            const alreadyApplied = existingApplications.some(app => app.username === username);
+            if (alreadyApplied) {
+                alert('❌ У вас уже есть активная заявка на рассмотрении. Дождитесь решения.');
+                renderHome();
+                return;
+            }
+
+            const application = {
+                id: generateId(),
+                username,
+                age: parseInt(age),
+                reason,
+                userId: currentUser.id,
+                timestamp: new Date().toISOString(),
+                status: 'pending' // pending, approved, rejected
+            };
+
+            await saveApplicationToDB(application);
+            alert('✅ Заявка успешно отправлена! Главный администратор рассмотрит её.');
+            renderHome();
+        };
+
+        // ---------- ПАНЕЛЬ ЗАЯВОК ДЛЯ ГЛАВНОГО АДМИНА ----------
+        window.renderApplicationsPanel = async function() {
+            if (!currentUser || !currentUser.isSuperAdmin) {
+                alert('Доступ запрещён.');
+                renderHome();
+                return;
+            }
+
+            const pendingApplications = await getApplicationsByStatus('pending');
+            
+            let currentUserAvatarHtml = await renderAvatarElement(currentUser.id, 36);
+
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        <div class="user-info">
+                            ${currentUserAvatarHtml}
+                            <span>${currentUser.username} <span class="super-admin-badge">SUPER ADMIN</span></span>
+                        </div>
+                        <button class="btn" onclick="renderHome()">🏠 На главную</button>
+                        <button class="btn" onclick="logoutHandler()">🚪 Выйти</button>
+                    </div>
+                </div>
+                <div class="content">
+                    <h2 style="margin-bottom: 20px;">📋 Заявки на админа (${pendingApplications.length})</h2>
+                    <div class="applications-container">
+                        ${pendingApplications.length === 0 ? '<p style="color: #aaa; text-align: center;">Нет новых заявок.</p>' : ''}
+                        ${pendingApplications.map(app => `
+                            <div class="application-card" id="app-${app.id}">
+                                <div class="application-header">
+                                    <span class="application-user">${escapeHtml(app.username)}</span>
+                                    <span class="application-date">${new Date(app.timestamp).toLocaleString()}</span>
+                                </div>
+                                <div class="application-info">
+                                    <p><strong>Возраст:</strong> ${app.age}</p>
+                                    <p><strong>Причина:</strong></p>
+                                    <div class="application-reason">${escapeHtml(app.reason)}</div>
+                                </div>
+                                <div class="application-actions">
+                                    <button class="btn btn-success" onclick="approveApplication('${app.id}')">✅ Принять</button>
+                                    <button class="btn btn-danger" onclick="rejectApplication('${app.id}')">❌ Отклонить</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        // Одобрение заявки
+        window.approveApplication = async function(applicationId) {
+            if (!currentUser || !currentUser.isSuperAdmin) return;
+            
+            const application = await getApplicationById(applicationId);
+            if (!application) return;
+
+            // Находим пользователя
+            const user = users.find(u => u.id === application.userId);
+            if (user) {
+                // Делаем пользователя админом (но не суперадмином)
+                user.isAdmin = true;
+                // Не меняем isSuperAdmin – это только для Youtube-Dregot
+                saveUsers();
+
+                // Если это текущий пользователь – обновляем сессию
+                if (currentUser && currentUser.id === user.id) {
+                    currentUser.isAdmin = true;
+                    saveCurrentUser();
+                }
+
+                // Обновляем статус заявки
+                await updateApplicationStatus(applicationId, 'approved');
+                alert(`✅ Пользователь ${user.username} теперь администратор!`);
+            } else {
+                alert('❌ Пользователь не найден. Возможно, он удалил аккаунт.');
+                await updateApplicationStatus(applicationId, 'rejected');
+            }
+
+            // Перезагружаем панель заявок
+            renderApplicationsPanel();
+        };
+
+        // Отклонение заявки
+        window.rejectApplication = async function(applicationId) {
+            if (!currentUser || !currentUser.isSuperAdmin) return;
+            
+            await updateApplicationStatus(applicationId, 'rejected');
+            alert('❌ Заявка отклонена.');
+            renderApplicationsPanel();
+        };
+
+        // ---------- ОТДЕЛЬНЫЙ РЕНДЕРИНГ ВКЛАДКИ YOUTUBE ----------
+        async function renderYoutubeTab() {
+            const isSuperAdmin = currentUser?.isSuperAdmin || false;
+            let currentUserAvatarHtml = '';
+            let adminBadgeHtml = '';
+            
+            if (currentUser) {
+                currentUserAvatarHtml = await renderAvatarElement(currentUser.id, 36);
+                if (currentUser.isSuperAdmin) {
+                    adminBadgeHtml = '<span class="super-admin-badge">SUPER ADMIN</span>';
+                } else if (currentUser.isAdmin) {
+                    adminBadgeHtml = '<span class="admin-badge">ADMIN</span>';
+                }
+            }
+
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        ${!isSuperAdmin ? '<button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>' : ''}
+                        ${currentUser ? `
+                            <div class="user-info">
+                                ${currentUserAvatarHtml}
+                                <span>${currentUser.username} ${adminBadgeHtml}</span>
+                            </div>
+                            <button class="btn" onclick="renderUpload()">➕ Загрузить</button>
+                            <button class="btn" onclick="importFromVideoFolder()">📁 Импорт из Video</button>
+                            <button class="btn" onclick="renderSettings()">⚙️ Настройки</button>
+                            <button class="btn" onclick="renderChannelSettings()">📺 Настройки канала</button>
+                            ${!currentUser.isSuperAdmin ? '<button class="btn" onclick="renderApplicationForm()">📝 Подать заявку на админа</button>' : ''}
+                            ${isSuperAdmin ? '<button class="btn btn-warning" onclick="renderApplicationsPanel()">📋 Заявки на админа</button>' : ''}
+                            <button class="btn" onclick="logoutHandler()">🚪 Выйти</button>
+                        ` : `
+                            <button class="btn btn-primary" onclick="renderLogin()">🔑 Войти</button>
+                            <button class="btn" onclick="renderRegister()">📝 Регистрация</button>
+                        `}
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="tabs">
+                        <div class="tab" onclick="setTab('new')">🆕 Новые видео</div>
+                        <div class="tab" onclick="setTab('popular')">🔥 Популярные (топ 100)</div>
+                        <div class="tab active" onclick="setTab('youtube')">🎬 YouTube Видео</div>
+                    </div>
+
+                    <div class="youtube-search">
+                        <h2 style="margin-bottom: 20px;">🔍 Поиск на YouTube</h2>
+                        <form onsubmit="youtubeSearchHandler(event)">
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="youtube-query" class="form-control" placeholder="Введите запрос..." required style="flex: 1;">
+                                <button type="submit" class="btn btn-primary">Искать</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    ${selectedYoutubeVideoId ? `
+                        <div class="youtube-player">
+                            <iframe src="https://www.youtube.com/embed/${selectedYoutubeVideoId}" allowfullscreen></iframe>
+                        </div>
+                    ` : ''}
+
+                    <div class="grid" id="youtube-results-grid">
+                        ${youtubeSearchResults.length === 0 ? '<p style="color: #aaa;">Введите запрос для поиска видео на YouTube.</p>' : ''}
+                        ${youtubeSearchResults.map(video => `
+                            <div class="card" onclick="selectYoutubeVideo('${video.id}')">
+                                <img class="thumbnail" src="${video.thumbnail}" alt="${video.title}">
+                                <div class="video-info">
+                                    <div class="video-title">${escapeHtml(video.title)}</div>
+                                    <div class="video-meta">
+                                        ${escapeHtml(video.channel)} • 
+                                        ${new Date(video.publishedAt).toLocaleDateString()}
+                                    </div>
+                                    <div class="video-meta" style="margin-top: 5px; color: #777;">
+                                        ${escapeHtml(video.description.substring(0, 80))}...
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            app.innerHTML = html;
+        }
+
+        // Обработчик поиска YouTube
+        window.youtubeSearchHandler = async function(e) {
+            e.preventDefault();
+            const query = document.getElementById('youtube-query').value.trim();
+            if (!query) return;
+            youtubeSearchResults = await searchYouTube(query);
+            selectedYoutubeVideoId = null;
+            setTab('youtube');
+        };
+
+        // Выбор видео из результатов поиска
+        window.selectYoutubeVideo = function(videoId) {
+            selectedYoutubeVideoId = videoId;
+            setTab('youtube');
+        };
+
+        // Переключение вкладок
+        window.setTab = function(tab) {
+            currentTab = tab;
+            renderHome();
+        };
+
+        // Экранирование HTML
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Редактирование видео
+        window.editVideoPrompt = async function(videoId) {
+            const video = getVideoById(videoId);
+            if (!video) return;
+            const newTitle = prompt('Введите новое название видео:', video.title);
+            if (newTitle && newTitle.trim() !== '') {
+                await updateVideoTitle(videoId, newTitle.trim());
+                renderHome();
+            }
+        };
+
+        // Удаление видео
+        window.deleteVideoHandler = async function(videoId) {
+            if (confirm('Удалить видео?')) {
+                await deleteVideo(videoId);
+                renderHome();
+            }
+        };
+
+        // ---------- РЕГИСТРАЦИЯ ----------
+        window.renderRegister = function() {
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        <button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <h2 style="margin-bottom: 20px;">📝 Регистрация</h2>
+                    <form onsubmit="registerHandler(event)">
+                        <div class="form-group">
+                            <label>Имя пользователя</label>
+                            <input type="text" id="reg-username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль</label>
+                            <input type="password" id="reg-password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button>
+                        <button type="button" class="btn" style="width:100%; margin-top:10px;" onclick="renderHome()">Отмена</button>
+                    </form>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        window.registerHandler = function(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+            if (!username || !password) {
+                alert('Заполните все поля');
+                return;
+            }
+            const result = registerUser(username, password);
+            if (result.success) {
+                if (username === 'Youtube-Dregot') {
+                    alert('👑 Добро пожаловать, Главный Администратор! Файл с данными сохранён.');
+                } else {
+                    alert('✅ Регистрация успешна!');
+                }
+                renderLogin();
+            } else {
+                alert(result.error);
+            }
+        };
+
+        // ---------- ВХОД ----------
+        window.renderLogin = function() {
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        <button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <h2 style="margin-bottom: 20px;">🔑 Вход</h2>
+                    <form onsubmit="loginHandler(event)">
+                        <div class="form-group">
+                            <label>Имя пользователя</label>
+                            <input type="text" id="login-username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль</label>
+                            <input type="password" id="login-password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;">Войти</button>
+                        <button type="button" class="btn" style="width:100%; margin-top:10px;" onclick="renderHome()">Отмена</button>
+                    </form>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        window.loginHandler = function(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            const result = loginUser(username, password);
+            if (result.success) {
+                renderHome();
+            } else {
+                alert(result.error);
+            }
+        };
+
+        window.logoutHandler = function() {
+            logout();
+        };
+
+        // ---------- ЗАГРУЗКА ВИДЕО ----------
+        window.renderUpload = function() {
+            if (!currentUser) {
+                alert('Необходимо войти');
+                renderLogin();
+                return;
+            }
+            const maxSizeMB = getMaxUploadSizeForUser(currentUser);
+            let maxSizeText = '';
+            if (currentUser.isAdmin) {
+                maxSizeText = `Администратор: 20 ГБ (${maxSizeMB} МБ)`;
+            } else {
+                const ageDays = getAccountAgeInDays(currentUser);
+                maxSizeText = ageDays < 7 ? '1 ГБ (до 7 дней)' : '10 ГБ (более 7 дней)';
+            }
+
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        <button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>
+                        <span>👤 ${currentUser.username}</span>
+                        <button class="btn" onclick="logoutHandler()">Выйти</button>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <h2 style="margin-bottom: 20px;">📤 Загрузить видео</h2>
+                    <p style="color: #ffb300; margin-bottom: 15px;">
+                        Максимальный размер для вашего аккаунта: <strong>${maxSizeMB} МБ</strong> (${maxSizeText})
+                    </p>
+                    <form onsubmit="uploadHandler(event)">
+                        <div class="form-group">
+                            <label>Название видео</label>
+                            <input type="text" id="video-title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Видео (mp4)</label>
+                            <input type="file" id="video-file" accept="video/mp4" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Обложка (png, jpg)</label>
+                            <input type="file" id="thumbnail-file" accept="image/png, image/jpeg" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%;">Опубликовать</button>
+                        <button type="button" class="btn" style="width:100%; margin-top:10px;" onclick="renderHome()">Отмена</button>
+                    </form>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        window.uploadHandler = async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('video-title').value.trim();
+            const videoFile = document.getElementById('video-file').files[0];
+            const thumbFile = document.getElementById('thumbnail-file').files[0];
+            if (!title || !videoFile || !thumbFile) {
+                alert('Заполните все поля');
+                return;
+            }
+
+            const result = await addVideo(title, videoFile, thumbFile);
+            if (result) {
+                alert('✅ Видео опубликовано!');
+                renderHome();
+            }
+        };
+
+        // ---------- СТРАНИЦА ВИДЕО ----------
+        window.renderVideoPage = async function(videoId) {
+            const video = await getVideoFromDB(videoId);
+            if (!video) {
+                alert('Видео не найдено');
+                renderHome();
+                return;
+            }
+
+            await addView(videoId, currentUser?.id || null);
+            await loadVideosCache();
+            const updatedVideo = getVideoById(videoId);
+
+            const isLiked = currentUser ? updatedVideo.likes.includes(currentUser.id) : false;
+            const isDisliked = currentUser ? updatedVideo.dislikes.includes(currentUser.id) : false;
+            const isSubscribedToAuthor = currentUser ? isSubscribed(updatedVideo.authorId, currentUser.id) : false;
+            const isAdmin = currentUser?.isAdmin || false;
+            const isSuperAdmin = currentUser?.isSuperAdmin || false;
+            const canEdit = isAdmin || (currentUser && currentUser.id === updatedVideo.authorId);
+
+            const comments = await getCommentsByVideo(videoId);
+
+            const authorAvatar = await renderAvatarElement(updatedVideo.authorId, 36);
+            let currentUserAvatarHtml = '';
+            let adminBadgeHtml = '';
+            if (currentUser) {
+                currentUserAvatarHtml = await renderAvatarElement(currentUser.id, 36);
+                if (currentUser.isSuperAdmin) {
+                    adminBadgeHtml = '<span class="super-admin-badge">SUPER ADMIN</span>';
+                } else if (currentUser.isAdmin) {
+                    adminBadgeHtml = '<span class="admin-badge">ADMIN</span>';
+                }
+            }
+
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        ${!isSuperAdmin ? '<button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>' : ''}
+                        ${currentUser ? `
+                            <div class="user-info">
+                                ${currentUserAvatarHtml}
+                                <span>${currentUser.username} ${adminBadgeHtml}</span>
+                            </div>
+                            <button class="btn" onclick="renderUpload()">➕ Загрузить</button>
+                            <button class="btn" onclick="renderChannelSettings()">📺 Настройки канала</button>
+                            ${!currentUser.isSuperAdmin ? '<button class="btn" onclick="renderApplicationForm()">📝 Подать заявку на админа</button>' : ''}
+                            ${isSuperAdmin ? '<button class="btn btn-warning" onclick="renderApplicationsPanel()">📋 Заявки на админа</button>' : ''}
+                            <button class="btn" onclick="logoutHandler()">🚪 Выйти</button>
+                        ` : `
+                            <button class="btn btn-primary" onclick="renderLogin()">🔑 Войти</button>
+                            <button class="btn" onclick="renderRegister()">📝 Регистрация</button>
+                        `}
+                    </div>
+                </div>
+                <div class="video-player-container">
+                    <video src="${updatedVideo.videoData}" controls></video>
+                    <div class="video-details">
+                        <h1>${escapeHtml(updatedVideo.title)} ${canEdit ? '<button class="btn btn-small" onclick="editVideoPrompt(\'' + updatedVideo.id + '\')">✏️</button>' : ''}</h1>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                ${authorAvatar}
+                                <span style="color: #3ea6ff;">${escapeHtml(updatedVideo.authorName)}</span> • 
+                                👁 ${updatedVideo.views.length} просмотров
+                            </div>
+                            <div class="video-actions">
+                                <div class="like-btn ${isLiked ? 'active' : ''}" onclick="likeHandler('${updatedVideo.id}')">
+                                    👍 ${updatedVideo.likes.length} Лайк
+                                </div>
+                                <div class="dislike-btn ${isDisliked ? 'active' : ''}" onclick="dislikeHandler('${updatedVideo.id}')">
+                                    👎 ${updatedVideo.dislikes.length} Дизлайк
+                                </div>
+                                ${currentUser && updatedVideo.authorId !== currentUser.id ? `
+                                    <button class="subscribe-btn ${isSubscribedToAuthor ? 'subscribed' : ''}" onclick="subscribeHandler('${updatedVideo.authorId}', '${updatedVideo.id}')">
+                                        ${isSubscribedToAuthor ? 'Отписаться' : 'Подписаться'}
+                                    </button>
+                                ` : ''}
+                                ${canEdit ? `
+                                    <button class="btn btn-danger" onclick="deleteVideoHandler('${updatedVideo.id}')">🗑️ Удалить видео</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- КОММЕНТАРИИ -->
+                <div class="comments-section">
+                    <h3 style="margin-bottom: 20px;">💬 Комментарии (${comments.length})</h3>
+                    
+                    ${currentUser ? `
+                        <form onsubmit="commentHandler(event, '${updatedVideo.id}')" style="margin-bottom: 30px;">
+                            <div class="form-group">
+                                <textarea id="comment-text" class="form-control" rows="3" placeholder="Напишите комментарий..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Отправить</button>
+                        </form>
+                    ` : `
+                        <p style="color: #aaa; margin-bottom: 20px;">Войдите, чтобы оставить комментарий.</p>
+                    `}
+
+                    <div class="comments-list">
+                        ${comments.length === 0 ? '<p style="color: #aaa;">Пока нет комментариев. Будьте первым!</p>' : ''}
+                        ${comments.map(comment => `
+                            <div class="comment" id="comment-${comment.id}">
+                                <div class="comment-header">
+                                    <span class="comment-author">${escapeHtml(comment.authorName)}</span>
+                                    <span class="comment-date">${new Date(comment.timestamp).toLocaleString()}</span>
+                                </div>
+                                <div class="comment-text">${escapeHtml(comment.text)}</div>
+                                <div class="comment-actions">
+                                    ${(currentUser && (currentUser.id === comment.authorId || currentUser.isAdmin)) ? `
+                                        <button class="btn btn-danger btn-small" onclick="deleteCommentHandler('${comment.id}', '${updatedVideo.id}')">Удалить</button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <h3>Другие видео автора</h3>
+                    <div class="grid" style="margin-top: 20px;">
+                        ${videosCache.filter(v => v.authorId === updatedVideo.authorId && v.id !== updatedVideo.id).slice(0, 4).map(v => `
+                            <div class="card" onclick="renderVideoPage('${v.id}')">
+                                <img class="thumbnail" src="${v.thumbnailData}" alt="${v.title}">
+                                <div class="video-info">
+                                    <div class="video-title">${escapeHtml(v.title)}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        // Обработчик комментария
+        window.commentHandler = async function(e, videoId) {
+            e.preventDefault();
+            const text = document.getElementById('comment-text').value.trim();
+            if (!text) return;
+            await addComment(videoId, text);
+            renderVideoPage(videoId);
+        };
+
+        // Удаление комментария
+        window.deleteCommentHandler = async function(commentId, videoId) {
+            if (confirm('Удалить комментарий?')) {
+                const success = await deleteComment(commentId, currentUser?.id, currentUser?.isAdmin || false);
+                if (success) {
+                    renderVideoPage(videoId);
+                } else {
+                    alert('Недостаточно прав для удаления комментария.');
+                }
+            }
+        };
+
+        // ---------- ОБРАБОТЧИКИ ЛАЙКОВ, ДИЗЛАЙКОВ, ПОДПИСОК ----------
+        window.likeHandler = async function(videoId) {
+            if (!currentUser) {
+                alert('Войдите, чтобы поставить лайк');
+                renderLogin();
+                return;
+            }
+            await toggleLike(videoId, currentUser.id);
+            renderVideoPage(videoId);
+        };
+
+        window.dislikeHandler = async function(videoId) {
+            if (!currentUser) {
+                alert('Войдите, чтобы поставить дизлайк');
+                renderLogin();
+                return;
+            }
+            await toggleDislike(videoId, currentUser.id);
+            renderVideoPage(videoId);
+        };
+
+        window.subscribeHandler = function(authorId, videoId) {
+            if (!currentUser) {
+                alert('Войдите, чтобы подписаться');
+                renderLogin();
+                return;
+            }
+            toggleSubscription(authorId, currentUser.id);
+            renderVideoPage(videoId);
+        };
+
+        // ---------- НАСТРОЙКИ (ИНФОРМАЦИЯ О ФОНЕ И API КЛЮЧ) ----------
+        window.renderSettings = function() {
+            let isSuperAdmin = currentUser?.isSuperAdmin || false;
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        ${!isSuperAdmin ? '<button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>' : ''}
+                        ${currentUser ? `
+                            <span>👤 ${currentUser.username}</span>
+                            <button class="btn" onclick="logoutHandler()">🚪 Выйти</button>
+                        ` : `
+                            <button class="btn btn-primary" onclick="renderLogin()">🔑 Войти</button>
+                        `}
+                    </div>
+                </div>
+                <div class="form-container" style="max-width: 600px;">
+                    <h2 style="margin-bottom: 20px;">⚙️ Настройки</h2>
+                    
+                    <div style="background-color: #2a2a2a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px; color: #ffb300;">🖼️ Смена фона</h3>
+                        <p style="color: #ddd; margin-bottom: 15px;">
+                            Хотите поменять задний фон?<br>
+                            1. Зайдите в корневую папку <strong>Youtube 2.0</strong>.<br>
+                            2. Внутри папки <strong>Icons</strong> положите картинку с названием <strong>BackGround.png</strong> (или .jpg).<br>
+                            3. Перезагрузите страницу — фон обновится автоматически.
+                        </p>
+                        <p style="color: #aaa; font-size: 0.9rem;">
+                            Текущий фон: ${document.body.style.backgroundImage ? 'установлен' : 'по умолчанию'}
+                        </p>
+                    </div>
+
+                    <div style="background-color: #2a2a2a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px; color: #ffb300;">🔑 YouTube API ключ</h3>
+                        <p style="color: #ddd; margin-bottom: 15px;">
+                            Для поиска видео на YouTube требуется API ключ. Вы можете использовать текущий демо-ключ или ввести свой.
+                        </p>
+                        <form onsubmit="saveApiKeyHandler(event)">
+                            <div class="form-group">
+                                <label>API ключ</label>
+                                <input type="text" id="api-key" class="form-control" value="${youtubeApiKey}" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width:100%;">Сохранить ключ</button>
+                        </form>
+                    </div>
+
+                    <button class="btn" onclick="renderHome()" style="width:100%;">🔙 На главную</button>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        window.saveApiKeyHandler = function(e) {
+            e.preventDefault();
+            const newKey = document.getElementById('api-key').value.trim();
+            if (newKey) {
+                saveYoutubeApiKey(newKey);
+                alert('✅ API ключ сохранён!');
+                renderSettings();
+            }
+        };
+
+        // ---------- НАСТРОЙКИ КАНАЛА ----------
+        window.renderChannelSettings = async function() {
+            if (!currentUser) {
+                alert('Необходимо войти');
+                renderLogin();
+                return;
+            }
+
+            const stats = await getChannelStats(currentUser.id);
+            const currentAvatar = await getUserAvatar(currentUser.id);
+            const initial = currentUser.username.charAt(0).toUpperCase();
+
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        <button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>
+                        <span>👤 ${currentUser.username}</span>
+                        <button class="btn" onclick="logoutHandler()">🚪 Выйти</button>
+                    </div>
+                </div>
+                <div class="form-container" style="max-width: 600px;">
+                    <h2 style="margin-bottom: 20px;">📺 Настройки канала</h2>
+                    
+                    <!-- Аватарка -->
+                    <div class="avatar-upload">
+                        <h3 style="margin-bottom: 10px;">Аватарка</h3>
+                        <div id="avatar-preview" class="avatar-preview" style="background-image: ${currentAvatar ? `url('${currentAvatar}')` : 'none'}; background-size: cover; background-position: center;">
+                            ${!currentAvatar ? initial : ''}
+                        </div>
+                        <form onsubmit="uploadAvatarHandler(event)">
+                            <div class="form-group">
+                                <label>Выберите изображение</label>
+                                <input type="file" id="avatar-file" accept="image/png, image/jpeg, image/jpg, image/webp" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width:100%;">Загрузить аватарку</button>
+                        </form>
+                        ${currentAvatar ? `
+                            <button class="btn btn-danger" onclick="deleteAvatarHandler()" style="margin-top: 10px;">🗑️ Удалить аватарку</button>
+                        ` : ''}
+                    </div>
+
+                    <!-- Статистика -->
+                    <div class="channel-stats">
+                        <h3 style="margin-bottom: 20px;">📊 Статистика канала</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">👥 Подписчики</span>
+                            <span class="stat-value">${stats.subscribers}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">🎬 Всего видео</span>
+                            <span class="stat-value">${stats.videosCount}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">👁 Суммарные просмотры</span>
+                            <span class="stat-value">${stats.totalViews}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">👍 Всего лайков</span>
+                            <span class="stat-value">${stats.totalLikes}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">👎 Всего дизлайков</span>
+                            <span class="stat-value">${stats.totalDislikes}</span>
+                        </div>
+                    </div>
+
+                    <button class="btn" onclick="renderHome()" style="width:100%;">🔙 На главную</button>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        // Загрузка аватарки
+        window.uploadAvatarHandler = async function(e) {
+            e.preventDefault();
+            const file = document.getElementById('avatar-file').files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('❌ Аватарка слишком большая. Максимум 5 МБ.');
+                return;
+            }
+
+            try {
+                const avatarData = await readFileAsDataURL(file);
+                await setUserAvatar(currentUser.id, avatarData);
+                alert('✅ Аватарка обновлена!');
+                renderChannelSettings();
+            } catch (err) {
+                console.error(err);
+                alert('Ошибка при загрузке аватарки.');
+            }
+        };
+
+        // Удаление аватарки
+        window.deleteAvatarHandler = async function() {
+            if (confirm('Удалить аватарку?')) {
+                await deleteAvatarFromDB(currentUser.id);
+                avatarCache.delete(currentUser.id);
+                alert('✅ Аватарка удалена.');
+                renderChannelSettings();
+            }
+        };
+
+        // ---------- ФОРМА ВЛАДЕЛЬЦА (НЕ РАБОТАЕТ ДЛЯ СУПЕР-АДМИНА) ----------
+        window.renderOwnerForm = function() {
+            if (currentUser?.isSuperAdmin) {
+                alert('👑 Вы главный администратор, вам не нужно подтверждение владельца.');
+                renderHome();
+                return;
+            }
+
+            let html = `
+                <div class="header">
+                    <div class="logo" onclick="renderHome()">
+                        <img src="./Icons/Logo.png" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2210%22 y=%2265%22 font-size=%2250%22 fill=%22%23ff0000%22>🎬</text></svg>';">
+                        <span>YouTube 2.0</span>
+                    </div>
+                    <div class="user-section">
+                        <button class="btn btn-warning" onclick="renderOwnerForm()">👑 Вы владелец?</button>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <h2 style="margin-bottom: 20px;">👑 Проверка владельца</h2>
+                    <form onsubmit="ownerCheckHandler(event)">
+                        <div class="form-group">
+                            <label>Дата рождения (ДД.ММ.ГГГГ)</label>
+                            <input type="text" id="owner-birth" class="form-control" placeholder="02.02.2017" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль владельца</label>
+                            <input type="password" id="owner-password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning" style="width:100%;">🔑 Подтвердить</button>
+                        <button type="button" class="btn" style="width:100%; margin-top:10px;" onclick="renderHome()">Отмена</button>
+                    </form>
+                </div>
+            `;
+            app.innerHTML = html;
+        };
+
+        window.ownerCheckHandler = function(e) {
+            e.preventDefault();
+            const birth = document.getElementById('owner-birth').value.trim();
+            const pass = document.getElementById('owner-password').value.trim();
+
+            if (verifyOwner(birth, pass)) {
+                if (!currentUser) {
+                    alert('✅ Данные верны, но вы не авторизованы. Сначала войдите в систему, затем повторите проверку.');
+                    renderLogin();
+                    return;
+                }
+                
+                // Главный админ не может быть изменён
+                if (currentUser.isSuperAdmin) {
+                    alert('👑 Вы главный администратор, ваш статус неизменяем.');
+                    renderHome();
+                    return;
+                }
+
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex !== -1) {
+                    users[userIndex].isAdmin = true;
+                    currentUser.isAdmin = true;
+                    saveUsers();
+                    saveCurrentUser();
+                    alert('👑 Поздравляем! Вы получили права администратора.');
+                    renderHome();
+                } else {
+                    alert('Ошибка: пользователь не найден.');
+                }
+            } else {
+                alert('❌ Неверная дата рождения или пароль.');
+            }
+        };
+
+        // ---------- ИНИЦИАЛИЗАЦИЯ ----------
+        async function initApp() {
+            await openDB();
+            await loadVideosCache();
+            loadAssets();
+            renderHome();
+        }
+
+        initApp();
+
+        // Глобальные функции
+        window.importFromVideoFolder = importFromVideoFolder;
+        window.logout = logout;
+    </script>
+</body>
+</html>
